@@ -72,11 +72,6 @@ async function main() {
                 },
             },
             security: [{ bearerAuth: [] }],
-            tags: [
-                { name: 'user', description: 'User related end-points' },
-                { name: 'conversation', description: 'Conversation related end-points' },
-                { name: 'message', description: 'Message related end-points' },
-            ],
         },
     }));
 
@@ -85,10 +80,6 @@ async function main() {
         uiConfig: {
             docExpansion: 'none',
             deepLinking: false,
-        },
-        uiHooks: {
-            onRequest: async (request, reply) => { /* Custom logic */ },
-            preHandler: async (request, reply) => { /* Custom logic */ },
         },
         staticCSP: true, 
         transformStaticCSP: (header) => header,

@@ -1,15 +1,21 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { createRoom, findPendingOrInProgressRooms, assignRoom, completeRoom, findRoomById, getRoomStatus, findAllRooms } from "./room.service";
 import { CreateRoomInput } from "./room.schema";
+import { Room, RoomType } from "@prisma/client";
 
 export async function createRoomHandler(
     request: FastifyRequest<{ Body: CreateRoomInput }>,
     reply: FastifyReply
 ) {
-    const body = request.body;
+    const { room, userId, content } = request.body;
+
+    if(!Object.values(RoomType).includes(room as RoomType)) {
+        return reply.code(400).send({ message: 'Invalid room type.' });
+    }
+
     try {
-        const room = await createRoom(body);
-        return reply.code(201).send(room);
+        const newRoom = await createRoom(room as RoomType, userId, content);
+        return reply.code(201).send(newRoom);
     } catch (e) {
         return reply.code(500).send(e);
     }

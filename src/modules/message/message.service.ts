@@ -6,6 +6,20 @@ export async function findMessageByRoomId(roomId: number) {
         where: {
             roomId: Number(roomId),
         },
+        select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            roomId: true,
+            user: {
+                select: {
+                    id: true,
+                    email: true,
+                    username: true,
+                }
+
+            }
+        }
     });
 }
 
@@ -31,9 +45,9 @@ export async function updateMessage(input: UpdateMessageInput) {
 }
 
 export async function deleteMessage(messageId: number) {
-    prisma.message.delete({
+    await prisma.message.delete({
         where: {
-            id: messageId,
+            id: Number(messageId),
         }
     })
 }

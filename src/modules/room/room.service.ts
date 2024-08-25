@@ -1,23 +1,26 @@
+import { RoomType } from "@prisma/client";
 import prisma from "../../utils/prisma";
-import { CreateRoomInput } from "./room.schema";
 
-export async function createRoom(input: CreateRoomInput) {
-    const room = prisma.room.create({
+export async function createRoom(room: RoomType, userId: number, content: string) {
+    const newRoom = await prisma.room.create({
         data: {
-            userId: input.userId,
-            room: input.room,
+            userId: userId,
+            room: room,
             status: "PENDING",
         },
     });
-
-    const roomId = (await room).id
-    return prisma.message.create({
+    const newMessage = await prisma.message.create({
         data: {
-            content: input.content,
-            userId: input.userId,
-            roomId: roomId
+            content: content,
+            userId: userId,
+            roomId: newRoom.id,
         },
     });
+    return {
+        room: newRoom.room,
+        content: newMessage.content,
+        userId: newRoom.userId
+    };
 }
 
 export async function findPendingOrInProgressRooms() {

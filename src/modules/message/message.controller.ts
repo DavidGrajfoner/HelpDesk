@@ -50,7 +50,7 @@ export async function deleteMessageHandler(
 
     try {
         await deleteMessage(messageId);
-        return reply.send(201).send({ message: "Message deleted."});
+        return reply.code(201).send({ message: "Message deleted."});
     } catch (e) {
         return reply.code(500).send(e);
     }

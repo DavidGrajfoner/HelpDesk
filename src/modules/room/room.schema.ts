@@ -2,7 +2,7 @@ import { z } from "zod";
 import { buildJsonSchemas } from "fastify-zod";
 
 const createRoomSchema = z.object({
-    room: z.enum(["TEHNIKA", "STORITVE", "POGOVOR"]),
+    room: z.string(),
     userId: z.number(),
     content: z.string(),
 });

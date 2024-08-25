@@ -21,9 +21,6 @@ async function roomRoutes(server: FastifyInstance) {
     server.post("/", {
         schema: {
             body: $ref("createRoomSchema"),
-            response: {
-                201: $ref("createRoomSchema"),
-            },
         },
     }, createRoomHandler);
 
