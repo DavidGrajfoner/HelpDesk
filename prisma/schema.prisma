@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  email String @unique
+  username String @unique
+  role Role
+  password String
+  salt String
+  deleted Boolean @default(false)
+  messages Message[]
+  rooms Room[] @relation("UserRooms")
+  handledRoom Room[] @relation("OperatorHandledRooms")
+}
+
+model Message {
+  id Int @id @default(autoincrement())
+  content String
+  createdAt DateTime @default(now())
+  userId Int
+  roomId Int?
+  user User @relation(fields: [userId], references: [id])
+  room Room? @relation(fields: [roomId], references: [id])
+}
+
+model Room {
+  id Int @id @default(autoincrement())
+  userId Int
+  room RoomType
+  operatorId Int?
+  status RoomStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  completedAt DateTime?
+  messages Message[]
+  user User @relation("UserRooms", fields: [userId], references: [id])
+  operator User? @relation("OperatorHandledRooms", fields: [operatorId], references: [id])
+}
+
+enum Role {
+  USER
+  OPERATOR
+}
+
+enum RoomStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum RoomType {
+  TEHNIKA
+  STORITVE
+  POGOVOR
+}
+
